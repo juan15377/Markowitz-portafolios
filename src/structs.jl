@@ -11,6 +11,9 @@ function Base.getindex(p::Prices, key::String)
     return p.prices[key]
 end
 
+function Base.keys(p::Prices)
+    return keys(p.prices)
+end 
 
 mutable struct Portafolio
     prices::Prices
@@ -23,8 +26,6 @@ mutable struct Portafolio
     function Portafolio(tags::Vector{String, Symbol}, prices::Prices, capital::Number, date_start::Date, date_end::Date, period::Period)
 
     end
-
-
 
 end 
 
