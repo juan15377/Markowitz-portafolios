@@ -2,7 +2,7 @@ using CairoMakie
 using MarketData
 using Dates
 using Match
-
+using XLSX
 
 function get_prices(tags::Vector{String}, start_date::T, end_date::T, interval::String) where {T <: Dates.DateTime}
     prices::Dict{String, TimeArray} = Dict()
@@ -46,7 +46,24 @@ function plot(p::Prices)
     return series(points)
 end 
 
-function plot(p::Portafolio)
 
+function save_prices(prices::Prices, path::AbstractString)
+    num_sheet = 1
+    XLSX.openxlsx(path, mode="w") do xf
+
+        for tag in keys(prices)
+            sheet = XLSX.addsheet!(xf, tag)
+            prices_df = DataFrame(prices[tag])
+            sheet["A1"] = "Date"
+            sheet["B1"] = "Open"
+            sheet["C1"] = "High"
+            sheet["D1"] = "Low"
+            sheet["E1"] = "Close"
+            sheet["F1"] = "AdjClose"
+            sheet["G1"] = "Volume"
+            sheet["A2"] = Matrix(prices_df)
+            num_sheet += 1
+        end 
+    end
 end 
 
