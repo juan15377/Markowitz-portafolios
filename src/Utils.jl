@@ -4,21 +4,6 @@ using Dates
 using Match
 using XLSX
 
-function get_prices(tags::Vector{String}, start_date::T, end_date::T, interval::String) where {T <: Dates.DateTime}
-    prices::Dict{String, TimeArray} = Dict()
-
-    for tag in tags
-        time = YahooOpt(
-            period1 = start_date,
-            period2 = end_date,
-            interval = interval,
-            events = :history)
-
-        prices[tag] = yahoo(tag, time)
-    end
-
-    return Prices(prices)
-end
 
 function get_returns(prices::Prices, type = "Normal")
     f_ret = @match type begin
@@ -66,4 +51,25 @@ function save_prices(prices::Prices, path::AbstractString)
         end 
     end
 end 
+
+
+tickers = ["AAPL", "MSFT", "AMZN", "GOOGL", "TSLA", "JNJ"]
+examples_1 = ["AMZN", "META"]
+start_date = DateTime(2019, 9, 30)
+end_date = DateTime(2024, 9, 30)
+interval = "1d"
+
+
+prices = get_prices(tickers, start_date, end_date, interval)  # Ejecuta la función
+
+save_prices(prices, "precios_empresas.xlsx")
+
+
+function plot(portafolio::Portafolio)
+    if ! portafolio.is_optim 
+        error("portafolio is not optimized")
+    end 
+
+end 
+
 
