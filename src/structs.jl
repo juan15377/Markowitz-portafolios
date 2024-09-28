@@ -16,6 +16,7 @@ function Base.keys(p::Prices)
 end 
 
 
+
 function get_prices(tags::Vector{String}, start_date::T, end_date::T, interval::String) where {T <: Dates.DateTime}
     prices::Dict{String, TimeArray} = Dict()
 
@@ -26,13 +27,19 @@ function get_prices(tags::Vector{String}, start_date::T, end_date::T, interval::
             interval = interval,
             events = :history)
 
-        prices[tag] = yahoo(tag, time)
+        try prices[tag] = yahoo(tag, time)
+            catch err
+                println("not found $tag: in YahooFinance")
+                continue 
+            end 
     end
 
     return Prices(prices)
 end
 
+
 get_prices(tickets::Vector{String}, time::YahooOpt) = get_prices(tickets, time.period1, time.period2, time.interval)
+
 
 mutable struct Portafolio
     prices::Prices
@@ -64,3 +71,4 @@ mutable struct Portafolio
 
 end 
 
+Base.length(p::Portafolio) = length(keys(p.prices))
