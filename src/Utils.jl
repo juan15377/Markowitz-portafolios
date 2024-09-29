@@ -20,17 +20,6 @@ function get_returns(prices::Prices, type = "Normal")
     return r
 end 
 
-function plot(p::Prices)
-    points = []
-    for tag in tags(p)
-        adjclose = collect(p[tag].AdjClose) |> x -> map(y-> y[2], x)
-        time = 1:length(adjclose)
-        points_tag = Point2f.(time, adjclose)
-        push!(points, points_tag)
-    end 
-    return series(points)
-end 
-
 
 function save_prices(prices::Prices, path::AbstractString)
     num_sheet = 1
@@ -64,12 +53,5 @@ prices = get_prices(tickers, start_date, end_date, interval)  # Ejecuta la funci
 
 save_prices(prices, "precios_empresas.xlsx")
 
-
-function plot(portafolio::Portafolio)
-    if ! portafolio.is_optim 
-        error("portafolio is not optimized")
-    end 
-
-end 
 
 

@@ -4,7 +4,6 @@ using Ipopt
 using Match 
 
 
-
 function optim!(portafolio::Portafolio; f = "")
     # se define el modelo
     model = Model(optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0))
